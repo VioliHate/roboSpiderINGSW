@@ -375,7 +375,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "Robot",
+											"text": "RoboSpider",
 											"horizontalAlignment": 2,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -925,7 +925,7 @@
 									},
 									"edgePosition": 1,
 									"underline": false,
-									"text": "Accoppia",
+									"text": "Accoppiamento",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -1484,7 +1484,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFElm6BOFNpegQ="
 					},
-					"name": "Robot",
+					"name": "RoboSpider",
 					"visibility": "public",
 					"isAbstract": false,
 					"isFinalSpecialization": false,
@@ -1505,7 +1505,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFgPFn477R+wMk="
 							},
-							"name": "Accoppia",
+							"name": "Accoppiamento",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFgPF938rcCF1c=",
