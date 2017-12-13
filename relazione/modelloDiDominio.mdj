@@ -2049,9 +2049,9 @@
 									"showShadow": true,
 									"containerChangeable": false,
 									"containerExtending": false,
-									"left": 183,
+									"left": 179,
 									"top": 535,
-									"width": 84.91259765625,
+									"width": 93.79931640625,
 									"height": 13,
 									"autoResize": false,
 									"alpha": -2.0032034682189073,
@@ -2061,7 +2061,7 @@
 									},
 									"edgePosition": 1,
 									"underline": false,
-									"text": "InputRecords",
+									"text": "InputRecord ►",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -2461,7 +2461,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFgPFMshLF98AM="
 							},
-							"name": "InputRecords",
+							"name": "InputRecord ►",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFgUjG73+kg6vs=",
