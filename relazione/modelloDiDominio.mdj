@@ -925,7 +925,7 @@
 									},
 									"edgePosition": 1,
 									"underline": false,
-									"text": "Accoppiamento",
+									"text": "SiAccoppiaCon",
 									"horizontalAlignment": 2,
 									"verticalAlignment": 5,
 									"wordWrap": false
@@ -1505,7 +1505,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFgPFn477R+wMk="
 							},
-							"name": "Accoppiamento",
+							"name": "SiAccoppiaCon",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFgPF938rcCF1c=",
