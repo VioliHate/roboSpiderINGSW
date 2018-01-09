@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         //Enable bluetooth
         if (!bluetoothAdapter.isEnabled()) {
             bluetoothAdapter.enable();
-
             ((Button) findViewById(R.id.handleBluetoothButton)).setText("Disable Bluetooth");
         }
+        //disable bluetooth
         else
         {
             bluetoothAdapter.disable();
