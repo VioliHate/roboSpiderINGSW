@@ -1,12 +1,14 @@
 package com.ingsw2017.unical.mat.robospider;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mainActivityContext=this;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Message msg = Message.obtain();
+            String action = intent.getAction();
+            if(BluetoothDevice.ACTION_FOUND.equals(action)){
+                //Found, add to a device list
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +110,16 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             //TODO FARE ACCOPPIAMENTO BLUETOOTH
+//            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+//            startActivity(discoverableIntent);
+//            Log.i("Log", "Discoverable ");
+
+            Intent startNewActivity=new Intent(this, BluetoothActivity.class);
+            startActivity(startNewActivity);
         }
     }
+
 
     public void exit(View v)
     {

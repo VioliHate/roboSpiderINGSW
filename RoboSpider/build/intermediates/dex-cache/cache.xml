@@ -3,39 +3,21 @@
 
     <item
         is-multidex="true"
-        jar="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jar="C:\Users\cuista\AndroidStudio-workspace\roboSpiderINGSW\RoboSpider\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="aabd453cfe242bfc0b841c9123abdd68ba34fc66">
+        <dex dex="C:\Users\cuista\AndroidStudio-workspace\roboSpiderINGSW\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_338fe87223317fd12c3f6e48acd5a4278f6ee7b0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\cuista\AndroidStudio-workspace\roboSpiderINGSW\RoboSpider\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="26.0.2"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
-        <dex dex="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_ad33ba4c988c7fea5545287109bab8c6141caaba\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\cuista\.android\build-cache\886bffdbc0cd60683b488311996d13b7c3822453\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.2"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ab6eaa3c30c730a4ada1a5011dece2ca0b4eb9c0\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.2"
-        sha1="21ae37ccf8ccacc6b3bc28a9f3466f80d3af871f">
-        <dex dex="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_122bd5020c1d571f500e89252b8e19eeb348c20e\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\cuista\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.2"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="C:\Users\cuista\AndroidStudio-workspace\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.2_c629cd376daa052a10ad7036cfa0c89188e37157\classes.dex" />
+        <dex dex="C:\Users\cuista\AndroidStudio-workspace\roboSpiderINGSW\RoboSpider\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_393732f2d2a8ce1c4aa554bb214c32f0ad9ec84b\classes.dex" />
     </item>
 
 </items>
