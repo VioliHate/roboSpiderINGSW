@@ -8,15 +8,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
@@ -32,7 +35,7 @@ public class BluetoothActivity extends Activity {
     ListView listViewPaired;
     ListView listViewDetected;
     ArrayList<String> arrayListpaired;
-    Button buttonSearch,buttonOn,buttonDesc,buttonOff;
+    Button buttonSearch,buttonDesc;
     ArrayAdapter<String> adapter,detectedAdapter;
     static HandleSeacrh handleSeacrh;
     BluetoothDevice bdDevice;
@@ -48,13 +51,11 @@ public class BluetoothActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth);
+        arrayListpaired = new ArrayList<String>();// Create an ArrayAdapter from List
+        listViewPaired =(ListView) findViewById(R.id.listViewPaired);
         listViewDetected = (ListView) findViewById(R.id.listViewDetected);
-        listViewPaired = (ListView) findViewById(R.id.listViewPaired);
         buttonSearch = (Button) findViewById(R.id.buttonSearch);
-        buttonOn = (Button) findViewById(R.id.buttonOn);
         buttonDesc = (Button) findViewById(R.id.buttonDesc);
-        buttonOff = (Button) findViewById(R.id.buttonOff);
-        arrayListpaired = new ArrayList<String>();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         clicked = new ButtonClicked();
         handleSeacrh = new HandleSeacrh();
@@ -73,15 +74,15 @@ public class BluetoothActivity extends Activity {
         listViewPaired.setAdapter(adapter);
     }
 
+
+
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
         getPairedDevices();
-        buttonOn.setOnClickListener(clicked);
         buttonSearch.setOnClickListener(clicked);
         buttonDesc.setOnClickListener(clicked);
-        buttonOff.setOnClickListener(clicked);
         listViewDetected.setOnItemClickListener(listItemClicked);
         listViewPaired.setOnItemClickListener(listItemClickedonPaired);
     }
@@ -211,18 +212,12 @@ public class BluetoothActivity extends Activity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.buttonOn:
-                    onBluetooth();
-                    break;
                 case R.id.buttonSearch:
                     arrayListBluetoothDevices.clear();
                     startSearching();
                     break;
                 case R.id.buttonDesc:
                     makeDiscoverable();
-                    break;
-                case R.id.buttonOff:
-                    offBluetooth();
                     break;
                 default:
                     break;
@@ -280,19 +275,7 @@ public class BluetoothActivity extends Activity {
         BluetoothActivity.this.registerReceiver(myReceiver, intentFilter);
         bluetoothAdapter.startDiscovery();
     }
-    private void onBluetooth() {
-        if(!bluetoothAdapter.isEnabled())
-        {
-            bluetoothAdapter.enable();
-            Log.i("Log", "Bluetooth is Enabled");
-        }
-    }
-    private void offBluetooth() {
-        if(bluetoothAdapter.isEnabled())
-        {
-            bluetoothAdapter.disable();
-        }
-    }
+
     private void makeDiscoverable() {
         Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);

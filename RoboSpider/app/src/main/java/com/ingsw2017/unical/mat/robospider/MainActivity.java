@@ -13,10 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Context mainActivityContext=this;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
             //dialog avvenuto collegamento
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(mainActivityContext, android.R.style.Theme_Material_Dialog_Alert);
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
             } else {
-                builder = new AlertDialog.Builder(mainActivityContext);
+                builder = new AlertDialog.Builder(this);
             }
             builder.setTitle("Bluetooth is enabled")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
             //dialog avvenuto collegamento
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(mainActivityContext, android.R.style.Theme_Material_Dialog_Alert);
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
             } else {
-                builder = new AlertDialog.Builder(mainActivityContext);
+                builder = new AlertDialog.Builder(this);
             }
             builder.setTitle("Bluetooth is disabled")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -82,14 +82,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void connect(View v)
     {
-        if(!bluetoothAdapter.isEnabled())
+        //check if bluetooth is supported
+        if(bluetoothAdapter==null)
+        {
+            Toast.makeText(this,"Bluetooth not supported!",Toast.LENGTH_SHORT).show();
+        }
+        else if(!bluetoothAdapter.isEnabled())
         {
             //dialog attivazione bluetooth
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                builder = new AlertDialog.Builder(mainActivityContext, android.R.style.Theme_Material_Dialog_Alert);
+                builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
             } else {
-                builder = new AlertDialog.Builder(mainActivityContext);
+                builder = new AlertDialog.Builder(this);
             }
             builder.setTitle("Bluetooth request")
                     .setMessage("Robospider is requesting to turn on Bluetooth. Allow?")
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 //            startActivity(discoverableIntent);
 //            Log.i("Log", "Discoverable ");
 
-            Intent startNewActivity=new Intent(this, BluetoothActivity.class);
+            Intent startNewActivity=new Intent(this, BluetoothHandlerActivity.class);
             startActivity(startNewActivity);
         }
     }
