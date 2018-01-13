@@ -128,10 +128,35 @@ public class MainActivity extends AppCompatActivity {
 
     public void exit(View v)
     {
-        finish();
-        System.exit(0);
+        if(bluetoothAdapter.isEnabled()) {
+        //dialog disattivazione bluetooth prima di uscire
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Bluetooth is enabled")
+                .setMessage("Do you want to turn it down before exit?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        bluetoothAdapter.disable();
+                        ((Button) findViewById(R.id.handleBluetoothButton)).setText("Enable Bluetooth");
+                        finish();
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        System.exit(0);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        }
 
-        //SOLUZIONE PIù PULITA
+        //SOLUZIONE PIù PULITA PER CHIUDERE L'APP
 //        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
 //        homeIntent.addCategory( Intent.CATEGORY_HOME );
 //        homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

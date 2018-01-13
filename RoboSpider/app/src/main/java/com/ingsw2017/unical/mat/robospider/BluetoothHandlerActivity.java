@@ -37,6 +37,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLED=0;
     private static final int REQUEST_DISCOVERABLE=0;
+    final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     Context context=this;
 
@@ -68,6 +69,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         searchButton=(Button) findViewById(R.id.searchButton);
 
         listPaired= (ListView) findViewById(R.id.listPaired);
+        listAllDevices= (ListView) findViewById(R.id.listAllDevices);
 
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
 
@@ -111,7 +113,6 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // Only ask for these permissions on runtime when running Android 6.0 or higher
                     switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         case PackageManager.PERMISSION_DENIED:
