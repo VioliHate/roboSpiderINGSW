@@ -59,26 +59,12 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
         //start to find all bluetooth device, spend around 12 seconds
         bluetoothAdapter.startDiscovery();
-        //IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        IntentFilter bluetoothFilter = new IntentFilter();
-        bluetoothFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        bluetoothFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        bluetoothFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 
         //list all visible bluetooth devices
-        //registerReceiver(broadcastReceiver, filter);
-        registerReceiver(broadcastReceiver, bluetoothFilter);
-
-        if (bluetoothAdapter.isDiscovering()) {
-            // cancel the discovery if it has already started
-            bluetoothAdapter.cancelDiscovery();
-            System.out.println("DISCOVERY CANCEL");
-        }
-
-        if (bluetoothAdapter.startDiscovery()) {
-            // bluetooth has started discovery
-            System.out.println("DISCOVERY STARTED");
-        }
+        this.registerReceiver(broadcastReceiver, filter);
 
         discoverableButton.setOnClickListener(new View.OnClickListener() {
             @Override
