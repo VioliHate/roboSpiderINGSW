@@ -57,11 +57,13 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
 
-        //start to find all bluetooth device, spend around 12 seconds
-        bluetoothAdapter.startDiscovery();
+        bluetoothAdapter.cancelDiscovery();
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+
+        //start to find all bluetooth device, spend around 12 seconds
+        bluetoothAdapter.startDiscovery();
 
         //list all visible bluetooth devices
         this.registerReceiver(broadcastReceiver, filter);
