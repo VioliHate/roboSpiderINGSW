@@ -27,14 +27,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
+
 public class BluetoothHandlerActivity extends AppCompatActivity {
 
-    Button discoverableButton,pairedButton,searchButton;
-    ListView listPaired;
-    ListView listAllDevices;
+    private Button discoverableButton,pairedButton,searchButton;
+    private ListView listPaired;
+    private ListView listAllDevices;
 
     private static final int REQUEST_ENABLED=0;
     private static final int REQUEST_DISCOVERABLE=0;
@@ -81,6 +84,9 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         //list all visible bluetooth devices
         registerReceiver(broadcastReceiver, filter);
 
+        searchPairedDevices();
+        searchAllDevices();
+
         discoverableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,49 +100,39 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         pairedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //list paired devices
-                Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-
-                ArrayList<String> devices = new ArrayList<>();
-
-                for (BluetoothDevice bluetoothDevice : pairedDevices) {
-                    devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
-                }
-
-                ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
-
-                listPaired.setAdapter(arrayAdapter);
+                searchPairedDevices();
             }
         });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // Only ask for these permissions on runtime when running Android 6.0 or higher
-                    switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                        case PackageManager.PERMISSION_DENIED:
-                            ((TextView) new AlertDialog.Builder(BluetoothHandlerActivity.this)
-                                    .setTitle("Runtime Permissions up ahead")
-                                    .setMessage(Html.fromHtml("<p>To find nearby bluetooth devices please click \"Allow\" on the runtime permissions popup.</p>" +
-                                            "<p>For more info see <a href=\"http://developer.android.com/about/versions/marshmallow/android-6.0-changes.html#behavior-hardware-id\">here</a>.</p>"))
-                                    .setNeutralButton("Okay", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                                ActivityCompat.requestPermissions(BluetoothHandlerActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-                                            }
-                                        }
-                                    })
-                                    .show()
-                                    .findViewById(android.R.id.message))
-                                    .setMovementMethod(LinkMovementMethod.getInstance());       // Make the link clickable. Needs to be called after show(), in order to generate hyperlinks
-                            break;
-                        case PackageManager.PERMISSION_GRANTED:
-                            break;
-                    }
+                searchAllDevices();
+            }
+        });
+
+        listPaired.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                String deviceAddress= ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[1];
+                BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+
+                try {
+                    selectedDevice.getClass().getMethod("removeBond", (Class[]) null).invoke(selectedDevice, (Object[]) null);
+                    Log.i("Log", "Removed"+deviceAddress);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                    Log.i("Log", "NOT Removed"+deviceAddress);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    Log.i("Log", "NOT Removed"+deviceAddress);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                    Log.i("Log", "NOT Removed"+deviceAddress);
                 }
-                //start to find all bluetooth device, spend around 12 seconds
-                bluetoothAdapter.startDiscovery();
+                searchPairedDevices();
             }
         });
 
@@ -153,28 +149,61 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                     isBonded = selectedDevice.createBond();
                 }
                 if(isBonded)
-                    {
-                        Log.i("Log", "The bond is created: "+isBonded);
-                    }
+                {
+                    Log.i("Log", "The bond is created: "+isBonded);
+                }
+                else
+                {
+                    Log.i("Log", "The bond is NOT created: "+isBonded);
+                }
             }
         });
 
-//        listPaired.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-//            {
-//                String deviceAddress= ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[1];
-//                BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
-//
-//                Boolean isRemovedBound = bluetoothAdapter.getBondedDevices().remove(selectedDevice);
-//                    if(isRemovedBound) {
-//                        bluetoothAdapter.getBondedDevices().remove(selectedDevice);
-//                        Log.i("Log", "Removed"+deviceAddress);
-//                    }
-//            }
-//        });
+    }
 
+    private void searchPairedDevices()
+    {
+        //list paired devices
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+
+        ArrayList<String> devices = new ArrayList<>();
+
+        for (BluetoothDevice bluetoothDevice : pairedDevices) {
+            devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
+        }
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
+
+        listPaired.setAdapter(arrayAdapter);
+    }
+
+    private void searchAllDevices()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // Only ask for these permissions on runtime when running Android 6.0 or higher
+            switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                case PackageManager.PERMISSION_DENIED:
+                    ((TextView) new AlertDialog.Builder(BluetoothHandlerActivity.this)
+                            .setTitle("Runtime Permissions up ahead")
+                            .setMessage(Html.fromHtml("<p>To find nearby bluetooth devices please click \"Allow\" on the runtime permissions popup.</p>" +
+                                    "<p>For more info see <a href=\"http://developer.android.com/about/versions/marshmallow/android-6.0-changes.html#behavior-hardware-id\">here</a>.</p>"))
+                            .setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                        ActivityCompat.requestPermissions(BluetoothHandlerActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+                                    }
+                                }
+                            })
+                            .show()
+                            .findViewById(android.R.id.message))
+                            .setMovementMethod(LinkMovementMethod.getInstance());       // Make the link clickable. Needs to be called after show(), in order to generate hyperlinks
+                    break;
+                case PackageManager.PERMISSION_GRANTED:
+                    break;
+            }
+        }
+        //start to find all bluetooth device, spend around 12 seconds
+        bluetoothAdapter.startDiscovery();
     }
 
     @Override
