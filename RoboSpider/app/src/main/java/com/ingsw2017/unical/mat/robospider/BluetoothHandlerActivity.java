@@ -39,21 +39,19 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     private static final int REQUEST_DISCOVERABLE=0;
     final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
-    Context context=this;
-
     BluetoothAdapter bluetoothAdapter;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             ArrayList<String> devices = new ArrayList<>();
+            ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent
                         .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 devices.add(device.getName() + "\n" + device.getAddress());
                 Log.i("BT", device.getName() + "\n" + device.getAddress());
-                listAllDevices.setAdapter(new ArrayAdapter<String>(context,
-                        android.R.layout.simple_list_item_1, devices));
+                listAllDevices.setAdapter(arrayAdapter);
             }
         }
 
@@ -116,7 +114,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // Only ask for these permissions on runtime when running Android 6.0 or higher
                     switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         case PackageManager.PERMISSION_DENIED:
-                            ((TextView) new AlertDialog.Builder(context)
+                            ((TextView) new AlertDialog.Builder(BluetoothHandlerActivity.this)
                                     .setTitle("Runtime Permissions up ahead")
                                     .setMessage(Html.fromHtml("<p>To find nearby bluetooth devices please click \"Allow\" on the runtime permissions popup.</p>" +
                                             "<p>For more info see <a href=\"http://developer.android.com/about/versions/marshmallow/android-6.0-changes.html#behavior-hardware-id\">here</a>.</p>"))
