@@ -20,6 +20,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -139,6 +140,40 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             }
         });
 
+        listAllDevices.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+            {
+                String deviceAddress= ((String) listAllDevices.getItemAtPosition(position)).split("\\r?\\n")[1];
+                BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+                Log.i("Log", "The dvice : "+selectedDevice.toString());
+                Boolean isBonded = false;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    isBonded = selectedDevice.createBond();
+                }
+                if(isBonded)
+                    {
+                        Log.i("Log", "The bond is created: "+isBonded);
+                    }
+            }
+        });
+
+//        listPaired.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//        {
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
+//            {
+//                String deviceAddress= ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[1];
+//                BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+//
+//                Boolean isRemovedBound = bluetoothAdapter.getBondedDevices().remove(selectedDevice);
+//                    if(isRemovedBound) {
+//                        bluetoothAdapter.getBondedDevices().remove(selectedDevice);
+//                        Log.i("Log", "Removed"+deviceAddress);
+//                    }
+//            }
+//        });
 
     }
 
