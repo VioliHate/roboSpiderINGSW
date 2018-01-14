@@ -99,7 +99,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                 ArrayList<String> devices = new ArrayList<>();
 
                 for (BluetoothDevice bluetoothDevice : pairedDevices) {
-                    devices.add(bluetoothDevice.getName());
+                    devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
                 }
 
                 ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
