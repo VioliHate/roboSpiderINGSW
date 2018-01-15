@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void exit(View v)
     {
         if(bluetoothAdapter.isEnabled()) {

@@ -44,17 +44,19 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     BluetoothAdapter bluetoothAdapter;
+    //list for all devices;
+    ArrayList<String> devices;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+
             String action = intent.getAction();
-            ArrayList<String> devices = new ArrayList<>();
-            ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent
                         .getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 devices.add(device.getName() + "\n" + device.getAddress());
                 Log.i("BT", device.getName() + "\n" + device.getAddress());
+                ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, R.layout.device_text_style, devices);
                 listAllDevices.setAdapter(arrayAdapter);
             }
         }
@@ -156,6 +158,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                 {
                     Log.i("Log", "The bond is NOT created: "+isBonded);
                 }
+
             }
         });
 
@@ -172,7 +175,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, android.R.layout.simple_list_item_1, devices);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this,R.layout.device_text_style, devices);
 
         listPaired.setAdapter(arrayAdapter);
     }
@@ -202,6 +205,8 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                     break;
             }
         }
+        //init list for broadcast receiver
+        devices=new ArrayList<>();
         //start to find all bluetooth device, spend around 12 seconds
         bluetoothAdapter.startDiscovery();
     }
