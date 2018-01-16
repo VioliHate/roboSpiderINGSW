@@ -5,4 +5,4 @@
     android:layout_height="fill_parent"
     android:textSize="18dp"
     android:gravity="center"
-    android:textColor="#ff0400" />
+    android:textColor="#2fff00" />

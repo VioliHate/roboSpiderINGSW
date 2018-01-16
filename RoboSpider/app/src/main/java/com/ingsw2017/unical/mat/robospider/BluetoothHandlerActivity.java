@@ -175,7 +175,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this,R.layout.device_text_style, devices);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this,R.layout.paired_device_text_style, devices);
 
         listPaired.setAdapter(arrayAdapter);
     }
