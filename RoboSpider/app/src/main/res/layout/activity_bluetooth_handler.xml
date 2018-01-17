@@ -11,13 +11,16 @@
         android:id="@+id/discoverableButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="MAKE DISCOVERABLE"
         app:layout_constraintBottom_toTopOf="@+id/pairedButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
     <Button
         android:id="@+id/pairedButton"
@@ -44,7 +47,7 @@
     <ListView
         android:id="@+id/listPaired"
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="160dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -57,7 +60,7 @@
     <ListView
         android:id="@+id/listAllDevices"
         android:layout_width="0dp"
-        android:layout_height="180dp"
+        android:layout_height="160dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -70,20 +73,18 @@
         android:id="@+id/editText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPersonName"
         android:text="Bluetooth"
         android:textColor="@android:color/holo_blue_dark"
-        app:layout_constraintBottom_toTopOf="@+id/discoverableButton"
+        android:textIsSelectable="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="BLUETOOTH"
-        android:gravity="center"/><![CDATA[
+        tools:text="BLUETOOTH" /><![CDATA[
 
 
 
