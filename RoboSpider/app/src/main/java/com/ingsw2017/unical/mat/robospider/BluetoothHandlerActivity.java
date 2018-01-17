@@ -35,7 +35,7 @@ import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
 
 public class BluetoothHandlerActivity extends AppCompatActivity {
 
-    private Button discoverableButton,pairedButton,searchButton;
+    private Button discoverableButton,pairedButton,searchButton,connectRoboSpiderButton;
     private ListView listPaired;
     private ListView listAllDevices;
 
@@ -71,6 +71,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         discoverableButton=(Button) findViewById(R.id.discoverableButton);
         pairedButton=(Button) findViewById(R.id.pairedButton);
         searchButton=(Button) findViewById(R.id.searchButton);
+        connectRoboSpiderButton=(Button) findViewById(R.id.connectRoboSpiderButton);
 
         listPaired= (ListView) findViewById(R.id.listPaired);
         listAllDevices= (ListView) findViewById(R.id.listAllDevices);
@@ -110,6 +111,14 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 searchAllDevices();
+            }
+        });
+
+        connectRoboSpiderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startNewActivity=new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
+                startActivity(startNewActivity);
             }
         });
 

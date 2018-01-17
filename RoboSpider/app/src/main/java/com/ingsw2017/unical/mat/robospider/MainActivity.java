@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
         }
+        else {
+            finish();
+            System.exit(0);
+        }
 
         //SOLUZIONE PIù PULITA PER CHIUDERE L'APP
 //        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
