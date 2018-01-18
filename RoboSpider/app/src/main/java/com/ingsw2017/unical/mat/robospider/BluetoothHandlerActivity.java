@@ -1,7 +1,6 @@
 package com.ingsw2017.unical.mat.robospider;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -25,13 +24,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
-
-import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
 
 public class BluetoothHandlerActivity extends AppCompatActivity {
 
