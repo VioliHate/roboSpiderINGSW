@@ -49,6 +49,8 @@ import java.util.UUID;
 
 public class BluetoothHandlerActivity extends AppCompatActivity {
 
+    private static BluetoothHandlerActivity classInstance=null;
+
     private Button discoverableButton, pairedButton, searchButton, connectRoboSpiderButton;
     private ListView listPaired;
     private ListView listAllDevices;
@@ -83,6 +85,8 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         }
 
     };
+
+    //private BluetoothHandlerActivity(){}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,15 +143,8 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         connectRoboSpiderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String string=new String("1");
-                string.concat("\n");
-                try {
-                    outputStream.write(string.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                Intent startNewActivity = new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
-//                startActivity(startNewActivity);
+                Intent startNewActivity = new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
+                startActivity(startNewActivity);
             }
         });
 
@@ -271,5 +268,17 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();
+    }
+
+    public static BluetoothHandlerActivity getInstance(){return classInstance==null?classInstance=new BluetoothHandlerActivity():classInstance;}
+
+    public void sendMessage(String message)
+    {
+        try {
+            if(outputStream!=null)
+                outputStream.write(message.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

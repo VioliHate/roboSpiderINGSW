@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import java.io.IOException;
+
 public class AutoControlActivity extends AppCompatActivity {
 
     private Switch switchAutoControl;
@@ -25,12 +27,14 @@ public class AutoControlActivity extends AppCompatActivity {
                 if(isChecked)
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(Color.GREEN);
-                ((Switch) findViewById(R.id.switchAutoControl)).setText("ON");
+                    ((Switch) findViewById(R.id.switchAutoControl)).setText("ON");
+                    BluetoothHandlerActivity.getInstance().sendMessage("1");
                 }
                 else
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(0xFFFF4444);
-                ((Switch) findViewById(R.id.switchAutoControl)).setText("OFF");
+                    ((Switch) findViewById(R.id.switchAutoControl)).setText("OFF");
+                    BluetoothHandlerActivity.getInstance().sendMessage("2");
                 }
             }
         });
