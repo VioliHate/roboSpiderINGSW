@@ -1,16 +1,27 @@
 package com.ingsw2017.unical.mat.robospider;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothA2dp;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothHealth;
+import android.bluetooth.BluetoothProfile;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,24 +35,38 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public class BluetoothHandlerActivity extends AppCompatActivity {
 
-    private Button discoverableButton,pairedButton,searchButton,connectRoboSpiderButton;
+    private Button discoverableButton, pairedButton, searchButton, connectRoboSpiderButton;
     private ListView listPaired;
     private ListView listAllDevices;
 
-    private static final int REQUEST_ENABLED=0;
-    private static final int REQUEST_DISCOVERABLE=0;
+    private static final int REQUEST_ENABLED = 0;
+    private static final int REQUEST_DISCOVERABLE = 0;
     final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
 
     BluetoothAdapter bluetoothAdapter;
     //list for all devices;
     ArrayList<String> devices;
+
+    //for connecting paired device
+    BluetoothSocket socket;
+    private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
+    OutputStream outputStream;
+    InputStream inputStream;
+
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -64,15 +89,15 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_handler);
 
-        discoverableButton=(Button) findViewById(R.id.discoverableButton);
-        pairedButton=(Button) findViewById(R.id.pairedButton);
-        searchButton=(Button) findViewById(R.id.searchButton);
-        connectRoboSpiderButton=(Button) findViewById(R.id.connectRoboSpiderButton);
+        discoverableButton = (Button) findViewById(R.id.discoverableButton);
+        pairedButton = (Button) findViewById(R.id.pairedButton);
+        searchButton = (Button) findViewById(R.id.searchButton);
+        connectRoboSpiderButton = (Button) findViewById(R.id.connectRoboSpiderButton);
 
-        listPaired= (ListView) findViewById(R.id.listPaired);
-        listAllDevices= (ListView) findViewById(R.id.listAllDevices);
+        listPaired = (ListView) findViewById(R.id.listPaired);
+        listAllDevices = (ListView) findViewById(R.id.listAllDevices);
 
-        bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -90,9 +115,10 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //make the device discoverable
-                if(!bluetoothAdapter.isDiscovering())
-                {Intent intent=new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                startActivityForResult(intent,REQUEST_ENABLED);}
+                if (!bluetoothAdapter.isDiscovering()) {
+                    Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    startActivityForResult(intent, REQUEST_ENABLED);
+                }
             }
         });
 
@@ -113,55 +139,82 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         connectRoboSpiderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startNewActivity=new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
-                startActivity(startNewActivity);
+                String string=new String("1");
+                string.concat("\n");
+                try {
+                    outputStream.write(string.getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                Intent startNewActivity = new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
+//                startActivity(startNewActivity);
             }
         });
 
-        listPaired.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listPaired.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-            {
-                String deviceAddress= ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[1];
-                BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                //final String deviceName= ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[0];
+                final String deviceAddress = ((String) listPaired.getItemAtPosition(position)).split("\\r?\\n")[1];
+                final BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
 
-                try {
-                    selectedDevice.getClass().getMethod("removeBond", (Class[]) null).invoke(selectedDevice, (Object[]) null);
-                    Log.i("Log", "Removed"+deviceAddress);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                    Log.i("Log", "NOT Removed"+deviceAddress);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    Log.i("Log", "NOT Removed"+deviceAddress);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    Log.i("Log", "NOT Removed"+deviceAddress);
-                }
+                Thread connectionThread = new Thread() {
+                    public void run() {
+                        boolean connected=true;
+                        try {
+                            socket = selectedDevice.createRfcommSocketToServiceRecord(PORT_UUID);
+                            socket.connect();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(connected)
+                        {
+                            try {
+                                outputStream = socket.getOutputStream();
+                                inputStream = socket.getInputStream();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
+                connectionThread.start();
+
+
+                //RIMUOVE IL SELLECTED-DEVICE
+//                try {
+//                    selectedDevice.getClass().getMethod("removeBond", (Class[]) null).invoke(selectedDevice, (Object[]) null);
+//                    Log.i("Log", "Removed"+deviceAddress);
+//                } catch (NoSuchMethodException e) {
+//                    e.printStackTrace();
+//                    Log.i("Log", "NOT Removed"+deviceAddress);
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                    Log.i("Log", "NOT Removed"+deviceAddress);
+//                } catch (InvocationTargetException e) {
+//                    e.printStackTrace();
+//                    Log.i("Log", "NOT Removed"+deviceAddress);
+//                }
                 searchPairedDevices();
             }
         });
 
-        listAllDevices.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listAllDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,int position, long arg3)
-            {
-                String deviceAddress= ((String) listAllDevices.getItemAtPosition(position)).split("\\r?\\n")[1];
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                String deviceAddress = ((String) listAllDevices.getItemAtPosition(position)).split("\\r?\\n")[1];
                 BluetoothDevice selectedDevice = bluetoothAdapter.getRemoteDevice(deviceAddress);
-                Log.i("Log", "The dvice : "+selectedDevice.toString());
+                Log.i("Log", "The dvice : " + selectedDevice.toString());
                 Boolean isBonded = false;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     isBonded = selectedDevice.createBond();
                 }
-                if(isBonded)
-                {
-                    Log.i("Log", "The bond is created: "+isBonded);
-                }
-                else
-                {
-                    Log.i("Log", "The bond is NOT created: "+isBonded);
+                if (isBonded) {
+                    Log.i("Log", "The bond is created: " + isBonded);
+                } else {
+                    Log.i("Log", "The bond is NOT created: " + isBonded);
                 }
 
             }
@@ -169,24 +222,22 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
     }
 
-    private void searchPairedDevices()
-    {
+    private void searchPairedDevices() {
         //list paired devices
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
         ArrayList<String> devices = new ArrayList<>();
 
         for (BluetoothDevice bluetoothDevice : pairedDevices) {
-            devices.add(bluetoothDevice.getName()+ "\n" + bluetoothDevice.getAddress());
+            devices.add(bluetoothDevice.getName() + "\n" + bluetoothDevice.getAddress());
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this,R.layout.paired_device_text_style, devices);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(BluetoothHandlerActivity.this, R.layout.paired_device_text_style, devices);
 
         listPaired.setAdapter(arrayAdapter);
     }
 
-    private void searchAllDevices()
-    {
+    private void searchAllDevices() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  // Only ask for these permissions on runtime when running Android 6.0 or higher
             switch (ContextCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 case PackageManager.PERMISSION_DENIED:
@@ -211,7 +262,7 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
             }
         }
         //init list for broadcast receiver
-        devices=new ArrayList<>();
+        devices = new ArrayList<>();
         //start to find all bluetooth device, spend around 12 seconds
         bluetoothAdapter.startDiscovery();
     }
@@ -221,6 +272,4 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
-
-
 }
