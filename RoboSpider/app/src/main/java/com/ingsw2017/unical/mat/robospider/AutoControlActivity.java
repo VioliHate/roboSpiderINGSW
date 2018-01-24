@@ -28,13 +28,13 @@ public class AutoControlActivity extends AppCompatActivity {
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(Color.GREEN);
                     ((Switch) findViewById(R.id.switchAutoControl)).setText("ON");
-                    BluetoothHandlerActivity.getInstance().sendMessage("1");
+                    BluetoothHandlerActivity.getClassInstance().sendMessage("1");
                 }
                 else
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(0xFFFF4444);
                     ((Switch) findViewById(R.id.switchAutoControl)).setText("OFF");
-                    BluetoothHandlerActivity.getInstance().sendMessage("2");
+                    BluetoothHandlerActivity.getClassInstance().sendMessage("2");
                 }
             }
         });

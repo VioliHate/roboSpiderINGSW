@@ -86,11 +86,12 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
     };
 
-    //private BluetoothHandlerActivity(){}
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        classInstance=this;
+
         setContentView(R.layout.activity_bluetooth_handler);
 
         discoverableButton = (Button) findViewById(R.id.discoverableButton);
@@ -270,7 +271,13 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public static BluetoothHandlerActivity getInstance(){return classInstance==null?classInstance=new BluetoothHandlerActivity():classInstance;}
+    public static BluetoothHandlerActivity getClassInstance()
+    {
+        if(classInstance==null)
+            throw new NullPointerException();
+        else
+            return classInstance;
+    }
 
     public void sendMessage(String message)
     {
