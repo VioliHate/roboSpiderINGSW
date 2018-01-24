@@ -30,61 +30,17 @@
         app:srcCompat="@drawable/logo_robospider"
         android:layout_marginRight="8dp" />
 
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layout_joystick"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:visibility="visible"
+        android:background="@drawable/joystick_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6"
-        app:srcCompat="?android:attr/listChoiceIndicatorSingle" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@+id/imageButton4"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton3"
-        app:srcCompat="?android:attr/listChoiceIndicatorSingle"
-        android:layout_marginLeft="8dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:visibility="visible"
-        app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton1"
-        app:srcCompat="?android:attr/listChoiceIndicatorSingle"
-        android:layout_marginLeft="8dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        android:visibility="visible"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton1"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton1"
-        app:srcCompat="?android:attr/listChoiceIndicatorSingle"
-        android:layout_marginRight="8dp" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"></RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
