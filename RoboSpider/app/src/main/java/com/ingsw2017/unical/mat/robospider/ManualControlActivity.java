@@ -4,47 +4,65 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ManualControlActivity extends AppCompatActivity {
 
-    JoystickController joystickController;
-    RelativeLayout layout_joystick;
+    private ImageView imageButtonUp;
+    private ImageView imageButtonDown;
+    private ImageView imageButtonRight;
+    private ImageView imageButtonLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_control);
-        layout_joystick = (RelativeLayout) findViewById(R.id.layout_joystick);
-        joystickController=new JoystickController(this,layout_joystick,R.drawable.joystick_ball);
-        joystickController.setOffset(90);
-        joystickController.setMinimumDistance(50);
 
-        layout_joystick.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                joystickController.drawStick(arg1);
-                int direction = joystickController.get8Direction();
-                if (direction == JoystickController.STICK_UP) {
-                    System.out.println("Direction : Up");
-                } else if (direction == JoystickController.STICK_UPRIGHT) {
-                    System.out.println("Direction : Up Right");
-                } else if (direction == JoystickController.STICK_RIGHT) {
-                    System.out.println("Direction : Right");
-                } else if (direction == JoystickController.STICK_DOWNRIGHT) {
-                    System.out.println("Direction : Down Right");
-                } else if (direction == JoystickController.STICK_DOWN) {
-                    System.out.println("Direction : Down");
-                } else if (direction == JoystickController.STICK_DOWNLEFT) {
-                    System.out.println("Direction : Down Left");
-                } else if (direction == JoystickController.STICK_LEFT) {
-                    System.out.println("Direction : Left");
-                } else if (direction == JoystickController.STICK_UPLEFT) {
-                    System.out.println("Direction : Up Left");
-                } else if (direction == JoystickController.STICK_NONE) {
-                    System.out.println("Direction : Center");
-                }
-                return true;
-            }
-        });
+        imageButtonUp=(ImageView) findViewById(R.id.imageButtonUp);
+        imageButtonDown=(ImageView) findViewById(R.id.imageButtonDown);
+        imageButtonRight=(ImageView) findViewById(R.id.imageButtonRight);
+        imageButtonLeft=(ImageView) findViewById(R.id.imageButtonLeft);
+    }
+
+    public void sit(View view)
+    {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("2");
+        System.out.println("Action : 2");
+    }
+
+    public void stand(View view)
+    {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("c");
+        System.out.println("Action : c");
+    }
+
+    public void sayHi(View view)
+    {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("1");
+        System.out.println("Action : 1");
+    }
+
+    public void upButton(View view) {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("u");
+        System.out.println("Direction : Up");
+    }
+
+    public void leftButton(View view) {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("l");
+        System.out.println("Direction : Left");
+    }
+
+    public void rightButton(View view) {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("r");
+        System.out.println("Direction : Right");
+    }
+
+    public void downButton(View view) {
+        BluetoothHandlerActivity.getClassInstance().sendMessage("d");
+        System.out.println("Direction : Down");
     }
 }

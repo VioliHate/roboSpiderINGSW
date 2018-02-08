@@ -21,6 +21,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -64,11 +66,13 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     ArrayList<String> devices;
 
     //for connecting paired device
-    BluetoothSocket socket;
+    private static BluetoothSocket socket;
     private static final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // "random" unique identifier
     OutputStream outputStream;
     InputStream inputStream;
 
+    boolean connectedToRoboSpider=false;
+    Handler connectedToRoboSpiderHandler;
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -89,6 +93,9 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //reset socket if it's connected
+        resetConnection();
 
         classInstance=this;
 
@@ -115,6 +122,28 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
         searchPairedDevices();
         searchAllDevices();
+
+        connectedToRoboSpiderHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                connectedToRoboSpider=true;
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(BluetoothHandlerActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(BluetoothHandlerActivity.this);
+                }
+                builder.setTitle("Connected to RoboSpider")
+                        .setMessage("Now you're allowed to select a modality")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+            }
+        };
 
         discoverableButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,8 +173,10 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
         connectRoboSpiderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startNewActivity = new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
-                startActivity(startNewActivity);
+                if(connectedToRoboSpider) {
+                    Intent startNewActivity = new Intent(BluetoothHandlerActivity.this, ChooseModalityActivity.class);
+                    startActivity(startNewActivity);
+                }
             }
         });
 
@@ -158,6 +189,10 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
 
                 Thread connectionThread = new Thread() {
                     public void run() {
+
+                        //reset socket if it's connected
+                        resetConnection();
+
                         boolean connected=true;
                         try {
                             socket = selectedDevice.createRfcommSocketToServiceRecord(PORT_UUID);
@@ -172,6 +207,13 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                                 outputStream = socket.getOutputStream();
                                 inputStream = socket.getInputStream();
 
+                                System.out.println("MAC: "+selectedDevice.getAddress());
+                                if(selectedDevice.getAddress().equals("98:D3:32:30:F2:5A"))
+                                {
+                                    Message message = connectedToRoboSpiderHandler.obtainMessage();
+                                    message.sendToTarget();
+                                }
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -179,7 +221,6 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
                     }
                 };
                 connectionThread.start();
-
 
                 //RIMUOVE IL SELLECTED-DEVICE
 //                try {
@@ -282,10 +323,29 @@ public class BluetoothHandlerActivity extends AppCompatActivity {
     public void sendMessage(String message)
     {
         try {
+            System.out.println(inputStream.available());
             if(outputStream!=null)
                 outputStream.write(message.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void resetConnection() {
+        if (inputStream != null) {
+            try {inputStream.close();} catch (Exception e) {}
+            inputStream = null;
+        }
+
+        if (outputStream != null) {
+            try {outputStream.close();} catch (Exception e) {}
+            outputStream = null;
+        }
+
+        if (socket != null) {
+            try {socket.close();} catch (Exception e) {}
+            socket = null;
+        }
+
     }
 }

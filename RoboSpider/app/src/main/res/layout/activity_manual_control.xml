@@ -30,17 +30,93 @@
         app:srcCompat="@drawable/logo_robospider"
         android:layout_marginRight="8dp" />
 
-    <RelativeLayout
-        android:id="@+id/layout_joystick"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
+    <Button
+        android:id="@+id/buttonSit"
+        android:layout_width="40pt"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:onClick="sit"
+        android:text="SIT"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSayHi"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="8dp" />
+
+    <Button
+        android:id="@+id/buttonSayHi"
+        android:layout_width="40pt"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/joystick_container"
+        android:layout_marginTop="8dp"
+        android:onClick="sayHi"
+        android:text="SAY HI"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6"></RelativeLayout>
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonDown" />
+
+    <ImageView
+        android:id="@+id/imageButtonUp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:srcCompat="@drawable/joystick_ball"
+        android:onClick="upButton"/>
+
+    <ImageView
+        android:id="@+id/imageButtonLeft"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButtonDown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageButtonUp"
+        app:srcCompat="@drawable/joystick_ball"
+        android:layout_marginLeft="64dp"
+        android:onClick="leftButton"/>
+
+    <ImageView
+        android:id="@+id/imageButtonRight"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButtonDown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageButtonUp"
+        app:srcCompat="@drawable/joystick_ball"
+        android:layout_marginRight="64dp"
+        android:onClick="rightButton"/>
+
+    <ImageView
+        android:id="@+id/imageButtonDown"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="48dp"
+        android:onClick="downButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonUp"
+        app:srcCompat="@drawable/joystick_ball" />
+
+    <Button
+        android:id="@+id/buttonStand"
+        android:layout_width="40pt"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="STAND"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSayHi"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="8dp"
+        android:onClick="stand"/>
 
 </android.support.constraint.ConstraintLayout>

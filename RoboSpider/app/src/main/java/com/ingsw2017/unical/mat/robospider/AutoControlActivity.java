@@ -2,6 +2,7 @@ package com.ingsw2017.unical.mat.robospider;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static java.lang.Thread.sleep;
 
 public class AutoControlActivity extends AppCompatActivity {
 
@@ -28,27 +33,15 @@ public class AutoControlActivity extends AppCompatActivity {
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(Color.GREEN);
                     ((Switch) findViewById(R.id.switchAutoControl)).setText("ON");
-                    BluetoothHandlerActivity.getClassInstance().sendMessage("1");
+                    BluetoothHandlerActivity.getClassInstance().sendMessage("a");
                 }
                 else
                 {
                     ((Switch) findViewById(R.id.switchAutoControl)).setTextColor(0xFFFF4444);
                     ((Switch) findViewById(R.id.switchAutoControl)).setText("OFF");
-                    BluetoothHandlerActivity.getClassInstance().sendMessage("2");
+                    BluetoothHandlerActivity.getClassInstance().sendMessage("s");
                 }
             }
         });
-    }
-
-    public void on(View v)
-    {
-        ((Button) findViewById(R.id.handleBluetoothButton)).setText("OFF");
-        ((Button) findViewById(R.id.handleBluetoothButton)).setTextColor(Color.RED);
-    }
-
-    public void off(View v)
-    {
-        ((Button) findViewById(R.id.handleBluetoothButton)).setText("ON");
-        ((Button) findViewById(R.id.handleBluetoothButton)).setTextColor(Color.GREEN);
     }
 }
